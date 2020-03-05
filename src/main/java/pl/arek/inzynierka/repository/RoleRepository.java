@@ -1,4 +1,7 @@
 package pl.arek.inzynierka.repository;
 
-public interface RoleRepository {
+import org.springframework.data.repository.CrudRepository;
+import pl.arek.inzynierka.data.UsersRoles;
+
+public interface RoleRepository extends CrudRepository<UsersRoles, Long> {
 }
