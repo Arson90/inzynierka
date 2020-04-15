@@ -1,0 +1,2 @@
+spring.security.oauth2.resourceserver.jwt.privatekey-value: classpath:id_rsa
+spring.security.oauth2.resourceserver.jwt.publickey-value: classpath:id_rsa.pub
