@@ -8,8 +8,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import pl.arek.inzynierka.data.User;
+import org.springframework.stereotype.Component;
+import pl.arek.inzynierka.data.UserInternal;
+
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -21,27 +24,28 @@ import java.security.interfaces.RSAPublicKey;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-
-import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
+import java.util.Date;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+    public static final String AUTHORIZATION = "Authorization";
     private AuthenticationManager authenticationManager;
     public static final long EXPIRATION_TIME = 864_000_000; // 10 days
-    @Value("${spring.security.oauth2.resourceserver.jwt.publickey-value}")
+
     RSAPublicKey publicKey;
-    @Value("${spring.security.oauth2.resourceserver.jwt.privatekey-value}")
     RSAPrivateKey privateKey;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager){
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, RSAPublicKey publicKey, RSAPrivateKey privateKey){
         this.authenticationManager = authenticationManager;
+        this.publicKey = publicKey;
+        this.privateKey = privateKey;
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            User creds = new ObjectMapper()
-                    .readValue(request.getInputStream(), User.class);
+            UserInternal creds = new ObjectMapper()
+                    .readValue(request.getInputStream(), UserInternal.class);
 
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -56,10 +60,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        Date expiresDate = Date.from(Instant.now().plus(360L, ChronoUnit.DAYS));
         String token = JWT.create()
-                .withSubject(((User) authResult.getPrincipal()).getUserName())
-                .withExpiresAt(Instant.now().plus(360L, ChronoUnit.DAYS))
+                .withSubject(((User) authResult.getPrincipal()).getUsername())
+                .withExpiresAt(expiresDate)
                 .sign(Algorithm.RSA256(publicKey, privateKey));
-        resquset.addHeader(Authorization, token);
+        response.addHeader(AUTHORIZATION, token);
     }
 }

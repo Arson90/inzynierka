@@ -1,36 +1,48 @@
 package pl.arek.inzynierka.config;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.text.NumberFormat;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${spring.security.oauth2.resourceserver.jwt.key-value}")
-    RSAPublicKey key;
-    
+    @Value("classpath:public.pem")
+    RSAPublicKey publicKey;
+    @Value("${spring.security.oauth2.resourceserver.jwt.privatekey-value}")
+    RSAPrivateKey privateKey;
+
+    private UserDetailsServiceImpl userDetailsService;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder){
+        this.userDetailsService = userDetailsService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/clients/**")
+        http.cors().and().csrf().disable().authorizeRequests().antMatchers(HttpMethod.POST, "dupa")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
                                 .and()
-                                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-                                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
-                                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                                .addFilter(new JWTAuthenticationFilter(authenticationManager(),publicKey,privateKey))
+                                .addFilter(new JWTAuthorizationFilter(authenticationManager(),publicKey,privateKey))
+                                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
-    @Bean
-    JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(key).build();
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 }

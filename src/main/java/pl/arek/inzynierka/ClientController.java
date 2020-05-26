@@ -4,14 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.arek.inzynierka.data.Client;
-import pl.arek.inzynierka.data.User;
 import pl.arek.inzynierka.repository.ClientRepository;
-import pl.arek.inzynierka.repository.RoleRepository;
-import pl.arek.inzynierka.repository.UserRepository;
 
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
-import java.util.Collections;
 import java.util.Optional;
 
 @RestController

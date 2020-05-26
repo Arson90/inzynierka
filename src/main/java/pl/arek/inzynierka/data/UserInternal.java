@@ -11,7 +11,7 @@ import java.util.Set;
 @Entity
 @Table(name = "user")
 @NoArgsConstructor
-public class User {
+public class UserInternal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,10 +19,10 @@ public class User {
     private long id;
     private String userName;
     private String password;
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userInternal", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<UsersRoles> roles;
 
-    public User(String userName, String password, Set<UsersRoles> roles)
+    public UserInternal(String userName, String password, Set<UsersRoles> roles)
     {
         this.userName = userName;
         this.password = password;

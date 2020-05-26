@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class UsersRoles {
 
     @ManyToOne
-    private User user;
+    private UserInternal userInternal;
     private Roles role;
 
     @Id
@@ -23,8 +23,8 @@ public class UsersRoles {
         this.role = role;
     }
 
-    public UsersRoles(User user, Roles role) {
-        this.user = user;
+    public UsersRoles(UserInternal userInternal, Roles role) {
+        this.userInternal = userInternal;
         this.role = role;
     }
 }

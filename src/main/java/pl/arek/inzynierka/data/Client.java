@@ -21,14 +21,14 @@ public class Client {
     private List<Address> addresses;
     @OneToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserInternal userInternal;
 
-    public Client(String name, String surname, int phoneNumber, int personalNumber, List<Address> addresses, User user) {
+    public Client(String name, String surname, int phoneNumber, int personalNumber, List<Address> addresses, UserInternal userInternal) {
         this.name = name;
         this.surname = surname;
         this.phoneNumber = phoneNumber;
         this.personalNumber = personalNumber;
         this.addresses = addresses;
-        this.user = user;
+        this.userInternal = userInternal;
     }
 }

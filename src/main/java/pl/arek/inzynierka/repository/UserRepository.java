@@ -1,10 +1,10 @@
 package pl.arek.inzynierka.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import pl.arek.inzynierka.data.User;
+import pl.arek.inzynierka.data.UserInternal;
 
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends CrudRepository<UserInternal, Long> {
 
-    User findByUserName(String userName);
+    UserInternal findByUserName(String userName);
 
 }
