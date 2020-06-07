@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -17,16 +17,22 @@ public class UserInternal {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private long id;
-    private String userName;
+    private String username;
     private String password;
-    @OneToMany(mappedBy = "userInternal", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER)
     private Set<UsersRoles> roles;
 
-    public UserInternal(String userName, String password, Set<UsersRoles> roles)
-    {
-        this.userName = userName;
+    public UserInternal(String username, String password, Set<UsersRoles> roles) {
+        this.username = username;
         this.password = password;
         this.roles = roles;
+    }
+
+    public UserInternal(String username, String password)
+    {
+        this.username = username;
+        this.password = password;
+        this.roles = new HashSet<>();
     }
 
 }

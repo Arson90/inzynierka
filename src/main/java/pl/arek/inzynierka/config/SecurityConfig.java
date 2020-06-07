@@ -1,18 +1,15 @@
 package pl.arek.inzynierka.config;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.text.NumberFormat;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -31,12 +28,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().authorizeRequests().antMatchers(HttpMethod.POST, "dupa")
-                                .permitAll()
+        http.cors().and().csrf().disable().authorizeRequests()
+                                .antMatchers("/users/**").hasRole("ADMINISTRATOR")
+                                //.antMatchers("/users").hasRole("ADMINISTRATOR")
+                                .antMatchers("/login").permitAll()
                                 .anyRequest()
                                 .authenticated()
                                 .and()
-                                .addFilter(new JWTAuthenticationFilter(authenticationManager(),publicKey,privateKey))
+                                .addFilter(new JWTAuthenticationFilter(authenticationManager(),publicKey,privateKey,userDetailsService))
                                 .addFilter(new JWTAuthorizationFilter(authenticationManager(),publicKey,privateKey))
                                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }

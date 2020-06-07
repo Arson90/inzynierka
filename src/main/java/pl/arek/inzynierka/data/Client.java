@@ -16,18 +16,16 @@ public class Client {
     private String name;
     private String surname;
     private int phoneNumber;
-    private int personalNumber;
     @OneToMany
     private List<Address> addresses;
     @OneToOne
     @JoinColumn(name = "user_id")
     private UserInternal userInternal;
 
-    public Client(String name, String surname, int phoneNumber, int personalNumber, List<Address> addresses, UserInternal userInternal) {
+    public Client(String name, String surname, int phoneNumber, List<Address> addresses, UserInternal userInternal) {
         this.name = name;
         this.surname = surname;
         this.phoneNumber = phoneNumber;
-        this.personalNumber = personalNumber;
         this.addresses = addresses;
         this.userInternal = userInternal;
     }

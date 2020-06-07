@@ -11,20 +11,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class UsersRoles {
 
-    @ManyToOne
-    private UserInternal userInternal;
-    private Roles role;
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-
+    private Roles role;
+    //roles dostepne dla usera
     public UsersRoles(Roles role){
+
         this.role = role;
     }
 
-    public UsersRoles(UserInternal userInternal, Roles role) {
-        this.userInternal = userInternal;
-        this.role = role;
-    }
 }
