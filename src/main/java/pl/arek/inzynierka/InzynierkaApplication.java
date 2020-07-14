@@ -16,7 +16,6 @@ import java.util.HashSet;
 
 @SpringBootApplication
 public class InzynierkaApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(InzynierkaApplication.class, args);
 	}

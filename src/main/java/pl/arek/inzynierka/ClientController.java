@@ -47,11 +47,12 @@ public class ClientController {
     public ResponseEntity saveClient(@RequestBody ClientDTO clientDTO) {
         UserInternal userInternal = new UserInternal(clientDTO.getUsername(),encoder.encode(clientDTO.getPassword()));
         userRepository.save(userInternal);
-        Client client = new Client(clientDTO.getName(),clientDTO.getSurname(),clientDTO.getPhoneNumber(), new ArrayList<>(),userInternal);
+        Client client = new Client(clientDTO.getName(),clientDTO.getSurname(),clientDTO.getPhoneNumber(),
+                                    new ArrayList<>(),userInternal);
         return ResponseEntity.ok(clientRepository.save(client));
     }
 
-    //modyfikacj klienta
+    //modyfikacja klienta
     @RequestMapping(method = RequestMethod.PUT,value = "clients/{id}")
     public ResponseEntity saveClient(@PathVariable Long id, @RequestBody ClientUpdateDTO clientUpdateDTO) {
         return clientRepository.findById(id)
@@ -83,7 +84,7 @@ public class ClientController {
         return clientRepository.save(client);
     }
 
-    //usuwanie kilenta
+    //usuwanie adresu
     @RequestMapping(method = RequestMethod.DELETE,value = "clients/{id}/addresses/{idAddress}")
     public ResponseEntity deleteAddress(@PathVariable Long id, @PathVariable Long idAddress) {
         return clientRepository.findById(id)
@@ -116,7 +117,6 @@ public class ClientController {
             userRepository.delete(client.get().getUserInternal());
             return ResponseEntity.ok().build();
         }
-
         return ResponseEntity.notFound().build();
     }
 }

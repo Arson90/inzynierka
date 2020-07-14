@@ -22,22 +22,19 @@ public class UserController {
     //wylistowanie userów
     @RequestMapping(method = RequestMethod.GET, value = "users")
     public ResponseEntity getAllUsers(){
-
         Iterable<UserInternal> users = userRepository.findAll();
         return ResponseEntity.ok(users);
     }
 
-    //dodawanie userów
+    //dodanie użytkownika
     @RequestMapping(method = RequestMethod.POST,value = "users")
     public ResponseEntity saveUser(@RequestBody UserInternal userInternal) {
-
         return ResponseEntity.ok(userRepository.save(userInternal));
     }
 
-    //modyfiakcja uprawnien userów
+    //modyfikacja uprawnień użytkowników
     @RequestMapping(method = RequestMethod.POST,value = "users/{id}/roles/{role}")
     public ResponseEntity addRoles(@PathVariable Long id, @PathVariable String role) {
-
         return userRepository.findById(id).map(userInternal -> addRole(userInternal, role))
                 .map(userInternal -> ResponseEntity.ok(userInternal))
                 .orElseGet(() -> ResponseEntity.notFound().build());
