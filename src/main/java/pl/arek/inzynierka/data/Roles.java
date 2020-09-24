@@ -7,12 +7,12 @@ import lombok.Getter;
 
 public enum Roles {
 
-    @JsonProperty("ADMINISTRATOR")
-    ADMINISTRATOR,
-    @JsonProperty("EMPLOYEE")
-    EMPLOYEE,
-    @JsonProperty("CLIENT")
-    CLIENT;
+    @JsonProperty("ROLE_ADMINISTRATOR")
+    ROLE_ADMINISTRATOR,
+    @JsonProperty("ROLE_EMPLOYEE")
+    ROLE_EMPLOYEE,
+    @JsonProperty("ROLE_CLIENT")
+    ROLE_CLIENT;
 
 //    @Getter
 //    private String name;

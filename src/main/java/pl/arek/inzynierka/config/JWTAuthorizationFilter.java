@@ -51,7 +51,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                 .verify(header);
 
         if(decodedJWT!=null){
-            List<SimpleGrantedAuthority> authorities = Arrays.stream(decodedJWT.getClaim(AUTHORITIES).toString().split(","))
+            List<SimpleGrantedAuthority> authorities = Arrays.stream(decodedJWT.getClaim(AUTHORITIES).asString().split(","))
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
 

@@ -3,6 +3,7 @@ package pl.arek.inzynierka;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import pl.arek.inzynierka.data.Roles;
 import pl.arek.inzynierka.data.UserInternal;
@@ -18,6 +19,8 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
     //wylistowanie userów
     @RequestMapping(method = RequestMethod.GET, value = "users")
@@ -29,6 +32,7 @@ public class UserController {
     //dodanie użytkownika
     @RequestMapping(method = RequestMethod.POST,value = "users")
     public ResponseEntity saveUser(@RequestBody UserInternal userInternal) {
+        userInternal.setPassword(encoder.encode(userInternal.getPassword()));
         return ResponseEntity.ok(userRepository.save(userInternal));
     }
 
